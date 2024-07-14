@@ -9,22 +9,29 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios.get('http://localhost:3002/notes').then(response => {
+    axios.get('http://localhost:3000/notes').then(response => {
       console.log('promise fulfilled')
       setNotes(response.data)
     })
   }, [])
+
+
 
   const addNote = (event) => {
     event.preventDefault()
     const noteObject = {
       content: newNote,
       important: Math.random() > 0.5,
-      id: notes.length + 1,
     }
+    axios.post("http://localhost:3000/notes", noteObject).then(response => {
+      console.log(response)
+      setNotes(notes.concat(noteObject))
+      setNewNote('')
+    })
 
-    setNotes(notes.concat(noteObject))
-    setNewNote('')
+
+
+
   }
 
   const handleNoteChange = (event) => {
@@ -44,8 +51,8 @@ const App = () => {
         </button>
       </div>
       <ul>
-        {notesToShow.map(note =>
-          <Note key={note.id} note={note} />
+        {notesToShow.map((note, index) =>
+          <Note key={index} note={note} />
         )}
       </ul>
       <form onSubmit={addNote}>
